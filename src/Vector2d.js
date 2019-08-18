@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Конструктор принимает либо вектор,либо -- два числа.
- * Если не передать ни одного параметра,
- * то поля будут инициализированы нулями.
+ * Constructor receives either vector or two numbers.
+ * If no parameters were passed, fields would be initialized
+ * with zeroes
  */
 class Vector2d{
     /**
@@ -22,11 +22,11 @@ class Vector2d{
      * @param {Vector2d,Number} vector2d_or_x
      * @param {Vector2d,Number,undefined} y_or_res
      * @param {Vector2d ,undefined} res
-     *Сложение. Метод может принимать либо вектор,либо -- два числа.
-     *В каждом случае возможна передача вектора-"контейнера"
-     *в качестве последнего параметра, тогда
-     *вектор-"контейнер" будет возвращен как результат,а
-     *вектор ,метод которого был вызван, не изменится.
+     * Method can receive either vector or two numbers.
+     * In both cases passing vector-"container" as last
+     * parameter is possible, in this case vector-"container"
+     * will be returned and the vector which method was called
+     * will remain the same.
      */
     add(vector2d_or_x,y_or_res=undefined,res=undefined){
         if (vector2d_or_x instanceof Vector2d){
@@ -57,11 +57,11 @@ class Vector2d{
      * @param {Vector2d,Number} vector2d_or_x
      * @param {Vector2d,Number,undefined} y_or_res
      * @param {Vector2d ,undefined} res
-     *Разность. Метод может принимать либо вектор,либо -- два числа.
-     *В каждом случае возможна передача вектора-"контейнера"
-     *в качестве последнего параметра, тогда
-     *вектор-"контейнер" будет возвращен как результат,а
-     *вектор ,метод которого был вызван, не изменится.
+     * Method can receive either vector or two numbers.
+     * In both cases passing vector-"container" as a last
+     * parameter is possible, in this case vector-"container"
+     * will be returned and the vector which method was called
+     * will remain the same.
      */
     sub(vector2d_or_x,y_or_res=undefined,res=undefined){
         if (vector2d_or_x instanceof Vector2d){
@@ -91,11 +91,11 @@ class Vector2d{
     /**
      * @param {Number} number
      * @param {Vector2d ,undefined} res
-     *Умножение на число.
-     *Кроме числа,метод своим последним параметром
-     *может принимать вектор-"контейнер",который
-     *и будет возвращен как результат;вектор,
-     *метод которого был вызван, при этом не изменится.
+     * Multiplication by number.
+     * Method can receive vector-"container" as a last
+     * parameter. If vector-"container" was passed,
+     * it would be returned as a result and the vector
+     * which method was called would remain the same.
      */
     mul(number,res=undefined){
         if (res===undefined){
@@ -112,7 +112,7 @@ class Vector2d{
     /**
      * @param {Vector2d,Number} vector2d_or_x
      * @param {Number,undefined} y
-     Присваивание. Принимает либо вектор,либо -- два числа.
+     * Receives either vector or two numbers
      */
     set(vector2d_or_x,y=undefined){
         if (y===undefined){
@@ -127,28 +127,23 @@ class Vector2d{
 
     /**
      * @param {Vector2d} vector2d
-     Скалярное произведение. Принимает вектор в качестве параметра.
      */
     dotProduct(vector2d){
         return this.x*vector2d.x+this.y*vector2d.y;
     }
 
-    /**
-     Квадрат длины вектора.
-     */
+
     lengthSquared(){
         return this.x*this.x+this.y*this.y;
     }
 
-    /**
-     Длина вектора.
-     */
+
     length(){
         return Math.sqrt(this.lengthSquared());
     }
 
     /**
-     Метод выполняет нормирование вектора.
+     * Normalizes the vector
      */
     normalize(){
         return this.mul(1.0/this.length());
@@ -156,15 +151,14 @@ class Vector2d{
 
     /**
      * @param {Vector2d} vector_to_project_on
-     Проекция на вектор. Метод в какчестве параметра принмает вектор,
-     на который нужно спроецировать.
+     * Receives a vector to project on
      */
     vectorProjection(vector_to_project_on){
         return this.dotProduct(vector_to_project_on.normalize());
     }
 
     /**
-     Получение нормали к данному вектору.
+     * Returns new vector orthogonal to this
      */
     normal(){
         return new Vector2d(-this.y,this.x);
