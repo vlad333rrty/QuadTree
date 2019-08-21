@@ -3,10 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>try</title>
+    <style>
+    html,body{
+        height:100%;
+        width: 100%;
+    }
+    .delete{
+        position:absolute;
+        top:50px;
+        left:1350px;
+        font-weight:bold;
+    }
+    .add{
+        position: absolute;
+        top: 100px;
+        left: 1350px;
+        font-weight: bold;
+    }
+    </style>
 </head>
 <body>
+<button id="delete" class="delete" type="submit">delete</button>
+<button id="add" class="add" type="submit">add</button>
 <canvas id="canvas" width="1400" height="800"></canvas>
 <script src="src/Declaration.js"></script>
+<script src="src/Auxiliary.js"></script>
 <script src="src/Vector2d.js"></script>
 <script src="src/Input.js"></script>
 <script src="src/Shapes.js"></script>

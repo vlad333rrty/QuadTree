@@ -31,3 +31,14 @@ const mouseListener=(mouse)=>{
 
 mouseListener(mouse);
 
+let dlt=false
+let add=false
+
+deleteButton.addEventListener('mousedown',()=>{
+    dlt=true
+    add=false
+})
+addButton.addEventListener('mousedown',()=>{
+    dlt=false
+    add=true
+})

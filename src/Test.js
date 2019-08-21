@@ -1,10 +1,9 @@
 'use strict';
-let q=new QuadTree(new Bound(0,0,canvas.width,canvas.height),3);
-
+let q=new QuadTree(new Bound(0,0,canvas.width-100,canvas.height-100),3);
 
 let array=[];
 let c=new Circle(new Vector2d(100,230),56);
-array.push(new Circle(new Vector2d(20,320),5));
+array.push(new Circle(new Vector2d(20,320),10));
 array.push(new Circle(new Vector2d(30,30),20));
 array.push(new Circle(new Vector2d(304,330),40));
 array.push(new Circle(new Vector2d(100,430),22));
@@ -29,9 +28,15 @@ for (const a of array){
 q.draw();
 
 
+
 const render=()=>{
     if (mouse.isLeftClicked){
-        q.add(new Circle(new Vector2d(mouse.currentPosition),5))
+        if (dlt) {
+            const t=q.getElementByClick(mouse.clickPosition)
+            if (t!==undefined)
+                q.delete(t)
+        }else if (mouse.currentPosition.x<q.bounds.width && mouse.currentPosition.y<q.bounds.height && add)
+         q.add(new Circle(new Vector2d(mouse.currentPosition),2))
     }
     context.clearRect(0,0,canvas.width,canvas.height)
     q.draw()

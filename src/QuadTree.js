@@ -1,21 +1,22 @@
 'use strict';
 
 class QuadTree{
-    constructor(bounds,capacity){
+    constructor(bounds,capacity,parent){
         this.bounds=bounds;
         this.next=new Array(4).fill(null);
         this.objects=[];
         this.capacity=capacity||4;
+        this.parent=parent||this
     }
 
     divide(){
         const halfHeight=~~this.bounds.height/2;
         const halfWidth=~~this.bounds.width/2;
 
-        this.next[0]=new QuadTree(new Bound(this.bounds.x+halfWidth,this.bounds.y,halfWidth,halfHeight),this.capacity);
-        this.next[1]=new QuadTree(new Bound(this.bounds.x,this.bounds.y,halfWidth,halfHeight),this.capacity);
-        this.next[2]=new QuadTree(new Bound(this.bounds.x,this.bounds.y+halfHeight,halfWidth,halfHeight),this.capacity);
-        this.next[3]=new QuadTree(new Bound(this.bounds.x+halfWidth,this.bounds.y+halfHeight,halfWidth,halfHeight),this.capacity);
+        this.next[0]=new QuadTree(new Bound(this.bounds.x+halfWidth,this.bounds.y,halfWidth,halfHeight),this.capacity,this);
+        this.next[1]=new QuadTree(new Bound(this.bounds.x,this.bounds.y,halfWidth,halfHeight),this.capacity,this);
+        this.next[2]=new QuadTree(new Bound(this.bounds.x,this.bounds.y+halfHeight,halfWidth,halfHeight),this.capacity,this);
+        this.next[3]=new QuadTree(new Bound(this.bounds.x+halfWidth,this.bounds.y+halfHeight,halfWidth,halfHeight),this.capacity,this);
     }
 
     /**
@@ -135,6 +136,44 @@ class QuadTree{
         }
     }
 
+    delete(object){
+        if (this.next[0]!=null){
+            const index=this.getIndex(object)
+            if (index.index!==undefined){
+                this.next[index.index].delete(object)
+            }else {
+                if(this.objects.remove(object)) {
+                    QuadTree.rearrange(this,this.capacity)
+                    return true
+                }
+            }
+        }else {
+            if (this.objects.remove(object) && this.parent!==this) {
+                QuadTree.rearrange(this.parent,this.capacity)
+                return true
+            }
+        }
+    }
+
+    static rearrange(node,capacity){
+        let amount = 0
+        const getAll = (node) => {
+            if (node.next[0] != null) {
+                for (let i = 0; i < 4; i++) {
+                    getAll(node.next[i])
+                }
+            }
+            amount += node.objects.length
+        }
+        getAll(node)
+        if (amount <= capacity) {
+            for (let i = 0; i < 4; i++) {
+                [].push.apply(node.objects, node.next[i].objects)
+                node.next[i] = null
+            }
+        }
+    }
+
     draw(){
         context.strokeRect(this.bounds.x,this.bounds.y,this.bounds.width,this.bounds.height);
         for (let o of this.objects) {
@@ -159,6 +198,39 @@ class QuadTree{
             for (let i=0;i<4;i++)
                 this.next[i].draw();
         }
+    }
+
+    /**
+     * @param {Vector2d} clickCoords
+     */
+    getElementByClick(clickCoords){
+        const point=new Circle(clickCoords,0)
+        return this.getElement(this,point,clickCoords)
+    }
+
+    getElement=(node,point,coords)=>{
+        if (node.next[0]!=null){
+            const index=node.getIndex(point)
+            if (index.index!==undefined){
+                return this.getElement(node.next[index.index],point,coords)
+            }
+        }
+        return this.determineElement(node,coords)
+    }
+
+    determineElement=(node,coords)=>{
+        for (const object of node.objects){
+            const minMaxX=object.getMinMax('x')
+            const minMaxY=object.getMinMax('y')
+
+            const xEstimation=minMaxX.min<=coords.x && minMaxX.max>=coords.x
+            const yEstimation=minMaxY.min<=coords.y && minMaxY.max>=coords.y
+            if (xEstimation && yEstimation){
+                return object
+            }
+        }
+        if (node.parent!==node)
+            return this.determineElement(node.parent,coords)
     }
 }
 
