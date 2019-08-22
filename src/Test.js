@@ -31,12 +31,12 @@ q.draw();
 
 const render=()=>{
     if (mouse.isLeftClicked){
-        if (dlt) {
-            const t=q.getElementByClick(mouse.clickPosition)
+        if (buttons.deleteIsPressed) {
+            const t=q.getElementByClick(mouse.currentPosition)
             if (t!==undefined)
                 q.delete(t)
-        }else if (mouse.currentPosition.x<q.bounds.width && mouse.currentPosition.y<q.bounds.height && add)
-         q.add(new Circle(new Vector2d(mouse.currentPosition),2))
+        }else if (mouse.currentPosition.x<q.bounds.width && mouse.currentPosition.y<q.bounds.height && buttons.addIsPressed)
+         q.add(new Circle(new Vector2d(mouse.currentPosition),10))
     }
     context.clearRect(0,0,canvas.width,canvas.height)
     q.draw()

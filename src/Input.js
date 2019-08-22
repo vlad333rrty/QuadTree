@@ -31,14 +31,25 @@ const mouseListener=(mouse)=>{
 
 mouseListener(mouse);
 
-let dlt=false
-let add=false
+let buttons={
+    deleteIsPressed:false,
+    addIsPressed:false
+}
+
+
+const changeButtonColour=(button,flag)=>{
+    button.style.background=flag ? 'chartreuse' : 'aliceblue'
+}
 
 deleteButton.addEventListener('mousedown',()=>{
-    dlt=true
-    add=false
+    buttons.deleteIsPressed=!buttons.deleteIsPressed
+    buttons.addIsPressed=false
+    changeButtonColour(deleteButton,buttons.deleteIsPressed)
+    changeButtonColour(addButton,buttons.addIsPressed)
 })
 addButton.addEventListener('mousedown',()=>{
-    dlt=false
-    add=true
+    buttons.deleteIsPressed=false
+    buttons.addIsPressed=!buttons.addIsPressed
+    changeButtonColour(deleteButton,buttons.deleteIsPressed)
+    changeButtonColour(addButton,buttons.addIsPressed)
 })
