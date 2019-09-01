@@ -204,38 +204,36 @@ class QuadTree{
      * @param {Vector2d} clickCoords
      */
     getElementByClick(clickCoords){
-        const point=new Circle(clickCoords,0)
-        return this.getElement(this,point,clickCoords)
+        const point=new Point(clickCoords.x,clickCoords.y)
+        return this.getElement(this,point)
     }
 
-    getElement=(node,point,coords)=>{
+    getElement=(node,point)=>{
         if (node.next[0]!=null){
             const index=node.getIndex(point)
             if (index.index!==undefined){
-                return this.getElement(node.next[index.index],point,coords)
+                return this.getElement(node.next[index.index],point)
             }
         }
-        return this.determineElement(node,coords)
+        return this.determineElement(node,point)
     }
 
-    determineElement=(node,coords)=>{
+    determineElement=(node,point)=>{
         for (const object of node.objects){
-            const minMaxX=object.getMinMax('x')
-            const minMaxY=object.getMinMax('y')
-
-            const xEstimation=minMaxX.min<=coords.x && minMaxX.max>=coords.x
-            const yEstimation=minMaxY.min<=coords.y && minMaxY.max>=coords.y
-            if (xEstimation && yEstimation){
-                return object
+            if (object instanceof Circle){
+                if (point.sub(object.centre,new Vector2d()).lengthSquared()<=object.radius*object.radius)
+                    return object
+            }else {
+                const n = object.vertices.length
+                let i
+                for (i = 0; i < n; i++) {
+                    if (pseudoDotProduct(object.vertices[i], object.vertices[(i + 1) % n], point) < 0)
+                        break
+                }
+                if (i === n) return object
             }
         }
         if (node.parent!==node)
-            return this.determineElement(node.parent,coords)
+            return this.determineElement(node.parent,point)
     }
 }
-
-
-
-
-
-

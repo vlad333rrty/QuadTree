@@ -57,3 +57,14 @@ class Circle{
     }
 }
 
+class Point extends Vector2d{
+    constructor(x,y) {
+        super(x, y)
+    }
+    getMinMax(x_or_y){
+        return{
+            max:this[x_or_y],
+            min:this[x_or_y]
+        }
+    }
+}

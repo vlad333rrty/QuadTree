@@ -13,3 +13,7 @@ Array.prototype.remove=function (object) {
         return true
     }
 }
+
+const pseudoDotProduct=(A,B,C)=>{
+    return (B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x)
+}
